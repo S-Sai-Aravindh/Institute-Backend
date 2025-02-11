@@ -8,5 +8,7 @@
 
         public BatchDTO? Batch { get; set; }
         public TeacherDTO? Teacher { get; set; }  // To include teacher details
+
+        public EnrollmentDTO? Enrollment { get; set; }
     }
 }

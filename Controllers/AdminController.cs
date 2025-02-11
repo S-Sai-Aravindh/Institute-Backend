@@ -256,6 +256,7 @@ namespace Institute_Management.Controllers
             var student = await _context.Students
                 .Include(s => s.User)
                 .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Course)  // Ensure Course details are loaded
                 .FirstOrDefaultAsync(s => s.StudentId == id);
 
             if (student == null)
@@ -268,7 +269,7 @@ namespace Institute_Management.Controllers
                 student.User.Email = studentDto.User.Email ?? student.User.Email;
                 student.User.ContactDetails = studentDto.User.ContactDetails ?? student.User.ContactDetails;
 
-                _context.Entry(student.User).State = EntityState.Modified;  // Ensure EF tracks user changes
+                _context.Entry(student.User).State = EntityState.Modified;
             }
 
             // Update Batch if provided
@@ -305,12 +306,13 @@ namespace Institute_Management.Controllers
                 _context.Entry(student).Collection(s => s.Enrollments).IsModified = true;
             }
 
-            await _context.SaveChangesAsync(); // Save changes to the database
+            await _context.SaveChangesAsync();
 
-            // Fetch the updated student record
+            // Fetch the updated student record with enrollments and course details
             var updatedStudent = await _context.Students
                 .Include(s => s.User)
                 .Include(s => s.Enrollments)
+                .ThenInclude(e => e.Course)  // Load Course details for enrollments
                 .FirstOrDefaultAsync(s => s.StudentId == id);
 
             var studentDt = new StudentDTO
@@ -325,12 +327,20 @@ namespace Institute_Management.Controllers
                 BatchId = updatedStudent.BatchId,
                 Enrollments = updatedStudent.Enrollments.Select(e => new EnrollmentDTO
                 {
-                    CourseId = e.CourseId
+                    StudentId = e.StudentId,
+                    CourseId = e.Course.CourseId,
+                    Course = e.Course != null ? new CourseDTO
+                    {
+                        CourseId = e.Course.CourseId,
+                        CourseName = e.Course.CourseName,
+                        Description = e.Course.Description
+                    } : null
                 }).ToList()
             };
 
             return Ok(studentDt);
         }
+
 
 
 
@@ -595,6 +605,8 @@ namespace Institute_Management.Controllers
             var courses = await _context.Courses
                 .Include(c => c.Teacher)
                 .ThenInclude(t => t.User)
+                .Include(c => c.Enrollments)
+                .ThenInclude(e => e.Student)
                 .Select(c => new CourseDTO
                 {
                     CourseId = (int)c.CourseId,
@@ -613,6 +625,23 @@ namespace Institute_Management.Controllers
                             Email = c.Teacher.User.Email,
                             Role = c.Teacher.User.Role,
                             ContactDetails = c.Teacher.User.ContactDetails,
+                        }
+                    },
+                    Enrollment = new EnrollmentDTO
+                    {
+                        StudentId = c.Enrollments.Select(e => e.StudentId).FirstOrDefault(),
+                        CourseId = c.Enrollments.Select(e => e.CourseId).FirstOrDefault() ,
+                        Student = new StudentDTO 
+                        {
+                            UserId = c.Enrollments.Select(e => e.Student.UserId).FirstOrDefault(),
+                            User = new UserDTO
+                            {
+                                UserId = c.Enrollments.Select(e => e.Student.User.UserId).FirstOrDefault(),
+                                Name = c.Enrollments.Select(e => e.Student.User.Name).FirstOrDefault(),
+                                Email = c.Enrollments.Select(e => e.Student.User.Email).FirstOrDefault(),
+                                Role = c.Enrollments.Select(e => e.Student.User.Role).FirstOrDefault(),
+                                ContactDetails = c.Enrollments.Select(e => e.Student.User.ContactDetails).FirstOrDefault()
+                            }
                         }
                     }
                 })
