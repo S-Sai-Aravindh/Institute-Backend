@@ -962,7 +962,7 @@ namespace Institute_Management.Controllers
                 return NotFound();
 
             // Nullify the related CourseId (if necessary)
-            batch.CourseId = null;
+            //batch.CourseId = null;
 
             // Optionally, set the course reference to null if it is required
             // batch.Course = null; // This can also be done if the relationship requires it
