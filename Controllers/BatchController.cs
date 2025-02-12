@@ -22,7 +22,7 @@ namespace Institute_Management.Controllers
         public async Task<IActionResult> GetAllBatches()
         {
             var batches = await _context.Batches
-                .Include(b => b.Course)  // Ensure Course information is included
+                .Include(b => b.Courses)  // Ensure Course information is included
                 .Select(b => new BatchDTO
                 {
                     BatchId = (int)b.BatchId,
@@ -32,9 +32,9 @@ namespace Institute_Management.Controllers
                     //CourseId = b.CourseId,
                     Course = new CourseDTO  // Include related course details in the DTO
                     {
-                        CourseId = (int)b.Course.CourseId,
-                        CourseName = b.Course.CourseName,
-                        Description = b.Course.Description
+                        CourseId = (int)b.Courses.CourseId,
+                        CourseName = b.Courses.CourseName,
+                        Description = b.Courses.Description
                     }
                 })
                 .ToListAsync();
@@ -47,7 +47,7 @@ namespace Institute_Management.Controllers
         public async Task<IActionResult> GetBatchById(int id)
         {
             var batch = await _context.Batches
-                .Include(b => b.Course)  // Include Course data
+                .Include(b => b.Courses)  // Include Course data
                 .Where(b => b.BatchId == id)
                 .Select(b => new BatchDTO
                 {
@@ -58,9 +58,9 @@ namespace Institute_Management.Controllers
                     //CourseId = b.CourseId,
                     Course = new CourseDTO  // Include Course details in BatchDTO
                     {
-                        CourseId = (int)b.Course.CourseId,
-                        CourseName = b.Course.CourseName,
-                        Description = b.Course.Description
+                        CourseId = (int)b.Courses.CourseId,
+                        CourseName = b.Courses.CourseName,
+                        Description = b.Courses.Description
                     }
                 })
                 .FirstOrDefaultAsync();

@@ -56,13 +56,13 @@ namespace Institute_Management.Controllers
                         Course = new CourseDTO
                         {
                             CourseId = (int)s.Batch.CourseId,
-                            CourseName = s.Batch.Course.CourseName,
-                            Description = s.Batch.Course.Description,
+                            CourseName = s.Batch.Courses.CourseName,
+                            Description = s.Batch.Courses.Description,
                             Teacher = new TeacherDTO
                             {
-                                TeacherId = (int)s.Batch.Course.TeacherId,
+                                TeacherId = (int)s.Batch.Courses.TeacherId,
                                 UserId = (int)s.UserId,
-                                SubjectSpecialization = s.Batch.Course.Teacher.SubjectSpecialization
+                                SubjectSpecialization = s.Batch.Courses.Teacher.SubjectSpecialization
                             }
                         }
                     },
@@ -130,11 +130,11 @@ namespace Institute_Management.Controllers
                     BatchName = student.Batch.BatchName,
                     BatchTiming = student.Batch.BatchTiming,
                     BatchType = student.Batch.BatchType,
-                    Course = student.Batch.Course != null ? new CourseDTO
+                    Course = student.Batch.Courses != null ? new CourseDTO
                     {
-                        CourseId = (int)student.Batch.Course.CourseId,
-                        CourseName = student.Batch.Course.CourseName,
-                        Description = student.Batch.Course.Description
+                        CourseId = (int)student.Batch.Courses.CourseId,
+                        CourseName = student.Batch.Courses.CourseName,
+                        Description = student.Batch.Courses.Description
                     } : null
                 } : null,
                 Enrollments = student.Enrollments.Select(e => new EnrollmentDTO
@@ -203,7 +203,7 @@ namespace Institute_Management.Controllers
                     BatchName = studentDto.Batch.BatchName,
                     BatchType = studentDto.Batch.BatchType,
                     BatchTiming = studentDto.Batch.BatchTiming,
-                    Course = studentDto.Batch.Course != null ? new Course
+                    Courses = studentDto.Batch.Course != null ? new Course
                     {
                         CourseName = studentDto.Batch.Course.CourseName,
                         Description = studentDto.Batch.Course.Description,
@@ -281,6 +281,25 @@ namespace Institute_Management.Controllers
 
                 student.BatchId = batch.BatchId;
                 _context.Entry(student).Property(s => s.BatchId).IsModified = true;
+
+                // Find existing student-course entry
+                var existingEnrollment = await _context.StudentCourses
+                    .Where(sc => sc.StudentId == student.StudentId)
+                    .ToListAsync();
+
+                // Remove old enrollments
+                _context.StudentCourses.RemoveRange(existingEnrollment);
+
+                // Add new enrollment with the updated course
+                if (batch.CourseId.HasValue)
+                {
+                    var newEnrollment = new StudentCourseModule.StudentCourse
+                    {
+                        StudentId = student.StudentId,
+                        CourseId = batch.CourseId
+                    };
+                    _context.StudentCourses.Add(newEnrollment);
+                }
             }
 
             // Update Enrollments
@@ -338,7 +357,7 @@ namespace Institute_Management.Controllers
                 }).ToList()
             };
 
-            return Ok(studentDt);
+            return Ok(studentDto);
         }
 
 
@@ -349,16 +368,23 @@ namespace Institute_Management.Controllers
 
         // DELETE: api/admin/students/{id}
         [HttpDelete("students/{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteStudent(int id, [FromQuery] int userId)
         {
             var student = await _context.Students.FindAsync(id);
-            if (student == null) return NotFound();
+            if (student == null) return NotFound("Student not found");
+
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound("User not found");
 
             _context.Students.Remove(student);
+            _context.Users.Remove(user);
+
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
+
 
         #endregion
 
@@ -802,7 +828,7 @@ namespace Institute_Management.Controllers
         public async Task<ActionResult<IEnumerable<BatchDTO>>> GetAllBatches()
         {
             var batches = await _context.Batches
-                .Include(b => b.Course)
+                .Include(b => b.Courses)
                 .ThenInclude(c => c.Teacher) // Ensure Teacher is included
                 .ThenInclude(t => t.User) // Include User details inside Teacher
                 .Select(b => new BatchDTO
@@ -813,21 +839,21 @@ namespace Institute_Management.Controllers
                     BatchType = b.BatchType,
                     Course = new CourseDTO
                     {
-                        CourseId = (int)b.Course.CourseId,
-                        CourseName = b.Course.CourseName,
-                        Description = b.Course.Description,
+                        CourseId = (int)b.Courses.CourseId,
+                        CourseName = b.Courses.CourseName,
+                        Description = b.Courses.Description,
                         Teacher = new TeacherDTO
                         {
-                            TeacherId = (int)b.Course.Teacher.TeacherId,
-                            UserId = (int)b.Course.Teacher.UserId,
-                            SubjectSpecialization = b.Course.Teacher.SubjectSpecialization,
+                            TeacherId = (int)b.Courses.Teacher.TeacherId,
+                            UserId = (int)b.Courses.Teacher.UserId,
+                            SubjectSpecialization = b.Courses.Teacher.SubjectSpecialization,
                             User = new UserDTO
                             {
-                                UserId = (int)b.Course.Teacher.User.UserId,
-                                Name = b.Course.Teacher.User.Name,
-                                Email = b.Course.Teacher.User.Email,
-                                Role = b.Course.Teacher.User.Role,
-                                ContactDetails = b.Course.Teacher.User.ContactDetails
+                                UserId = (int)b.Courses.Teacher.User.UserId,
+                                Name = b.Courses.Teacher.User.Name,
+                                Email = b.Courses.Teacher.User.Email,
+                                Role = b.Courses.Teacher.User.Role,
+                                ContactDetails = b.Courses.Teacher.User.ContactDetails
                             }
                         }
                     }
@@ -841,7 +867,7 @@ namespace Institute_Management.Controllers
         public async Task<ActionResult<BatchDTO>> GetBatchById(int id)
         {
             var batch = await _context.Batches
-                .Include(b => b.Course)
+                .Include(b => b.Courses)
                 .ThenInclude(c => c.Teacher) // Ensure Teacher is included
                 .ThenInclude(t => t.User) // Include User details inside Teacher
                 .Where(b => b.BatchId == id)
@@ -853,21 +879,21 @@ namespace Institute_Management.Controllers
                     BatchType = b.BatchType,
                     Course = new CourseDTO
                     {
-                        CourseId = (int)b.Course.CourseId,
-                        CourseName = b.Course.CourseName,
-                        Description = b.Course.Description,
+                        CourseId = (int)b.Courses.CourseId,
+                        CourseName = b.Courses.CourseName,
+                        Description = b.Courses.Description,
                         Teacher = new TeacherDTO
                         {
-                            TeacherId = (int)b.Course.Teacher.TeacherId,
-                            UserId = (int)b.Course.Teacher.UserId,
-                            SubjectSpecialization = b.Course.Teacher.SubjectSpecialization,
+                            TeacherId = (int)b.Courses.Teacher.TeacherId,
+                            UserId = (int)b.Courses.Teacher.UserId,
+                            SubjectSpecialization = b.Courses.Teacher.SubjectSpecialization,
                             User = new UserDTO
                             {
-                                UserId = (int)b.Course.Teacher.User.UserId,
-                                Name = b.Course.Teacher.User.Name,
-                                Email = b.Course.Teacher.User.Email,
-                                Role = b.Course.Teacher.User.Role,
-                                ContactDetails = b.Course.Teacher.User.ContactDetails
+                                UserId = (int)b.Courses.Teacher.User.UserId,
+                                Name = b.Courses.Teacher.User.Name,
+                                Email = b.Courses.Teacher.User.Email,
+                                Role = b.Courses.Teacher.User.Role,
+                                ContactDetails = b.Courses.Teacher.User.ContactDetails
                             }
                         }
                     }
@@ -957,7 +983,7 @@ namespace Institute_Management.Controllers
         {
             try
             {
-                var batch = await _context.Batches.Include(b => b.Course)
+                var batch = await _context.Batches.Include(b => b.Courses)
                                                    .FirstOrDefaultAsync(b => b.BatchId == id);
                 if (batch == null)
                     return NotFound("Batch not found");
@@ -985,7 +1011,7 @@ namespace Institute_Management.Controllers
         [HttpDelete("batches/{id}")]
         public async Task<IActionResult> DeleteBatch(int id)
         {
-            var batch = await _context.Batches.Include(b => b.Course).FirstOrDefaultAsync(b => b.BatchId == id);
+            var batch = await _context.Batches.Include(b => b.Courses).FirstOrDefaultAsync(b => b.BatchId == id);
 
             if (batch == null)
                 return NotFound();

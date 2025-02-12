@@ -19,7 +19,7 @@ namespace Institute_Management.Models
             [ForeignKey("TeacherId")]
             public virtual TeacherModule.Teacher? Teacher { get; set; }
 
-            public virtual List<StudentCourseModule.StudentCourse> Enrollments { get; set; } = new List<StudentCourseModule.StudentCourse>();
+            public virtual List<StudentCourseModule.StudentCourse>? Enrollments { get; set; } = new List<StudentCourseModule.StudentCourse>();
         }
 
     }

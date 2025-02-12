@@ -21,9 +21,9 @@ namespace Institute_Management.Models
             public int? CourseId { get; set; }
 
             [ForeignKey("CourseId")]
-            public virtual CourseModule.Course? Course { get; set; }
+            public virtual CourseModule.Course? Courses { get; set; }
 
-            public virtual ICollection<CourseModule.Course> Courses { get; set; } = new List<CourseModule.Course>();
+            //public virtual ICollection<CourseModule.Course>? Courses { get; set; } = new List<CourseModule.Course>();
         }
 
     }

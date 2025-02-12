@@ -29,6 +29,23 @@ namespace Institute_Management.Models
             //modelBuilder.Entity<StudentCourseModule.StudentCourse>().HasData();
             //modelBuilder.Entity<UserModule.User>().HasData();
 
+            modelBuilder.Entity<StudentCourseModule.StudentCourse>()
+            .HasKey(sc => new { sc.StudentId, sc.CourseId });
+
+            modelBuilder.Entity<StudentCourseModule.StudentCourse>()
+                .HasOne(sc => sc.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(sc => sc.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<StudentCourseModule.StudentCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(sc => sc.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
             modelBuilder.Entity<Teacher>()
            .HasMany(t => t.Courses)
            .WithOne(c => c.Teacher)
@@ -43,8 +60,8 @@ namespace Institute_Management.Models
 
 
             // Configure composite primary key for StudentCourse
-            modelBuilder.Entity<StudentCourseModule.StudentCourse>()
-                .HasKey(sc => new { sc.StudentId, sc.CourseId });
+            //modelBuilder.Entity<StudentCourseModule.StudentCourse>()
+            //    .HasKey(sc => new { sc.StudentId, sc.CourseId });
 
             // Seed data
             SeedData(modelBuilder);

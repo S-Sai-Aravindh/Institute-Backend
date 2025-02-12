@@ -20,7 +20,7 @@ namespace Institute_Management.Models
             [ForeignKey("BatchId")]
             public virtual BatchModule.Batch? Batch { get; set; }
 
-            public virtual List<StudentCourseModule.StudentCourse> Enrollments { get; set; } = new List<StudentCourseModule.StudentCourse>();
+            public virtual List<StudentCourseModule.StudentCourse>? Enrollments { get; set; } = new List<StudentCourseModule.StudentCourse>();
         }
 
     }

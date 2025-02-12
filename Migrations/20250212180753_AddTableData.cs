@@ -7,7 +7,7 @@
 namespace Institute_Management.Migrations
 {
     /// <inheritdoc />
-    public partial class Addnewdata : Migration
+    public partial class AddTableData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,6 +98,27 @@ namespace Institute_Management.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    CourseId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TeacherId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.CourseId);
+                    table.ForeignKey(
+                        name: "FK_Courses_Teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "Teachers",
+                        principalColumn: "TeacherId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Batches",
                 columns: table => new
                 {
@@ -111,33 +132,11 @@ namespace Institute_Management.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Batches", x => x.BatchId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    CourseId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TeacherId = table.Column<int>(type: "int", nullable: true),
-                    BatchId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.CourseId);
                     table.ForeignKey(
-                        name: "FK_Courses_Batches_BatchId",
-                        column: x => x.BatchId,
-                        principalTable: "Batches",
-                        principalColumn: "BatchId");
-                    table.ForeignKey(
-                        name: "FK_Courses_Teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "Teachers",
-                        principalColumn: "TeacherId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Batches_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId");
                 });
 
             migrationBuilder.CreateTable(
@@ -220,21 +219,21 @@ namespace Institute_Management.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "CourseId", "BatchId", "CourseName", "Description", "TeacherId" },
+                columns: new[] { "CourseId", "CourseName", "Description", "TeacherId" },
                 values: new object[,]
                 {
-                    { 1, null, "Fullstack Development with .NET", "Learn to build modern full-stack applications using .NET.", 1 },
-                    { 2, null, "Fullstack Development with Python", "Master full-stack development with Python and related frameworks.", 2 },
-                    { 3, null, "Frontend Development with React", "Learn to build dynamic UIs using React.", 3 },
-                    { 4, null, "Software Testing", "Understand the principles and practices of software testing.", 1 },
-                    { 5, null, "DevOps", "Learn to automate the software delivery pipeline with DevOps practices.", 2 },
-                    { 6, null, "Salesforce", "Learn how to develop on the Salesforce platform.", 3 },
-                    { 7, null, "Cloud Computing", "Understand cloud computing principles and how to work with cloud providers.", 1 },
-                    { 8, null, "Data Analyst", "Master the techniques of data analysis using Python and Excel.", 2 },
-                    { 9, null, "Cyber Security", "Learn how to secure applications and networks from cyber threats.", 3 },
-                    { 10, null, "Android Development", "Develop mobile applications for Android using Java and Kotlin.", 1 },
-                    { 11, null, "Artificial Intelligence", "Dive into AI concepts and build intelligent systems with Python.", 2 },
-                    { 12, null, "Power BI", "Learn how to visualize and analyze data using Power BI.", 3 }
+                    { 1, "Fullstack Development with .NET", "Learn to build modern full-stack applications using .NET.", 1 },
+                    { 2, "Fullstack Development with Python", "Master full-stack development with Python and related frameworks.", 2 },
+                    { 3, "Frontend Development with React", "Learn to build dynamic UIs using React.", 3 },
+                    { 4, "Software Testing", "Understand the principles and practices of software testing.", 1 },
+                    { 5, "DevOps", "Learn to automate the software delivery pipeline with DevOps practices.", 2 },
+                    { 6, "Salesforce", "Learn how to develop on the Salesforce platform.", 3 },
+                    { 7, "Cloud Computing", "Understand cloud computing principles and how to work with cloud providers.", 1 },
+                    { 8, "Data Analyst", "Master the techniques of data analysis using Python and Excel.", 2 },
+                    { 9, "Cyber Security", "Learn how to secure applications and networks from cyber threats.", 3 },
+                    { 10, "Android Development", "Develop mobile applications for Android using Java and Kotlin.", 1 },
+                    { 11, "Artificial Intelligence", "Dive into AI concepts and build intelligent systems with Python.", 2 },
+                    { 12, "Power BI", "Learn how to visualize and analyze data using Power BI.", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -291,11 +290,6 @@ namespace Institute_Management.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courses_BatchId",
-                table: "Courses",
-                column: "BatchId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Courses_TeacherId",
                 table: "Courses",
                 column: "TeacherId");
@@ -319,26 +313,11 @@ namespace Institute_Management.Migrations
                 name: "IX_Teachers_UserId",
                 table: "Teachers",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Batches_Courses_CourseId",
-                table: "Batches",
-                column: "CourseId",
-                principalTable: "Courses",
-                principalColumn: "CourseId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Teachers_Users_UserId",
-                table: "Teachers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Batches_Courses_CourseId",
-                table: "Batches");
-
             migrationBuilder.DropTable(
                 name: "Admins");
 
@@ -355,16 +334,16 @@ namespace Institute_Management.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Batches");
 
             migrationBuilder.DropTable(
                 name: "Courses");
 
             migrationBuilder.DropTable(
-                name: "Batches");
+                name: "Teachers");
 
             migrationBuilder.DropTable(
-                name: "Teachers");
+                name: "Users");
         }
     }
 }

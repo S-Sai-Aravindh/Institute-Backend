@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Institute_Management.Migrations
 {
     [DbContext(typeof(InstituteContext))]
-    [Migration("20250212121426_Addnewdata")]
-    partial class Addnewdata
+    [Migration("20250212180753_AddTableData")]
+    partial class AddTableData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,9 +216,6 @@ namespace Institute_Management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
 
-                    b.Property<int?>("BatchId")
-                        .HasColumnType("int");
-
                     b.Property<string>("CourseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -231,8 +228,6 @@ namespace Institute_Management.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CourseId");
-
-                    b.HasIndex("BatchId");
 
                     b.HasIndex("TeacherId");
 
@@ -605,19 +600,15 @@ namespace Institute_Management.Migrations
 
             modelBuilder.Entity("Institute_Management.Models.BatchModule+Batch", b =>
                 {
-                    b.HasOne("Institute_Management.Models.CourseModule+Course", "Course")
+                    b.HasOne("Institute_Management.Models.CourseModule+Course", "Courses")
                         .WithMany()
                         .HasForeignKey("CourseId");
 
-                    b.Navigation("Course");
+                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("Institute_Management.Models.CourseModule+Course", b =>
                 {
-                    b.HasOne("Institute_Management.Models.BatchModule+Batch", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("BatchId");
-
                     b.HasOne("Institute_Management.Models.TeacherModule+Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId")
@@ -667,11 +658,6 @@ namespace Institute_Management.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Institute_Management.Models.BatchModule+Batch", b =>
-                {
-                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("Institute_Management.Models.CourseModule+Course", b =>

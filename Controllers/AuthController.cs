@@ -280,11 +280,27 @@ namespace Institute_Management.Controllers
                 {
                     var student = new StudentModule.Student
                     {
-                        UserId = user.UserId // Ensure that the UserId is set
+                        UserId = user.UserId
                     };
                     _context.Students.Add(student);
                     await _context.SaveChangesAsync();
+
+                    // Reload student from DB to get generated StudentId
+                    student = await _context.Students.FirstOrDefaultAsync(s => s.UserId == user.UserId);
+
+                    if (student != null)
+                    {
+                        var studentCourse = new StudentCourseModule.StudentCourse
+                        {
+                            StudentId = student.StudentId,
+                            CourseId = 1 // Ensure EF Core allows null CourseId
+                        };
+                        _context.StudentCourses.Add(studentCourse);
+                        await _context.SaveChangesAsync();
+                    }
                 }
+
+
                 else if (user.Role == "Teacher")
                 {
                     var teacher = new TeacherModule.Teacher

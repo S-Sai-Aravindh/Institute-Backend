@@ -19,7 +19,7 @@ namespace Institute_Management.Models
             [ForeignKey("UserId")]
             public virtual UserModule.User? User { get; set; }
 
-            public virtual ICollection<CourseModule.Course> Courses { get; set; } = new List<CourseModule.Course>();
+            public virtual ICollection<CourseModule.Course>? Courses { get; set; } = new List<CourseModule.Course>();
         }
 
     }
