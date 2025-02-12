@@ -444,19 +444,19 @@ namespace Institute_Management.Migrations
                         new
                         {
                             TeacherId = 1,
-                            SubjectSpecialization = "Mathematics",
+                            SubjectSpecialization = "Fullstack Development with .NET",
                             UserId = 3
                         },
                         new
                         {
                             TeacherId = 2,
-                            SubjectSpecialization = "Physics",
+                            SubjectSpecialization = "DevOps",
                             UserId = 4
                         },
                         new
                         {
                             TeacherId = 3,
-                            SubjectSpecialization = "Software Engineering",
+                            SubjectSpecialization = "Cyber Security",
                             UserId = 8
                         });
                 });

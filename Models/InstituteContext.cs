@@ -70,10 +70,11 @@ namespace Institute_Management.Models
 
             // Seeding Teachers
             modelBuilder.Entity<TeacherModule.Teacher>().HasData(
-                new TeacherModule.Teacher { TeacherId = 1, UserId = 3, SubjectSpecialization = "Mathematics" },
-                new TeacherModule.Teacher { TeacherId = 2, UserId = 4, SubjectSpecialization = "Physics" },
-                new TeacherModule.Teacher { TeacherId = 3, UserId = 8, SubjectSpecialization = "Software Engineering" }
+                new TeacherModule.Teacher { TeacherId = 1, UserId = 3, SubjectSpecialization = "Fullstack Development with .NET" },  // Teaches .NET and Software Testing
+                new TeacherModule.Teacher { TeacherId = 2, UserId = 4, SubjectSpecialization = "DevOps" }, // Teaches Python, DevOps, and Data Analysis
+                new TeacherModule.Teacher { TeacherId = 3, UserId = 8, SubjectSpecialization = "Cyber Security" } // Teaches React, Cyber Security, and Power BI
             );
+
             // Seeding Courses 
             modelBuilder.Entity<CourseModule.Course>().HasData(
                 new CourseModule.Course { CourseId = 1, CourseName = "Fullstack Development with .NET", Description = "Learn to build modern full-stack applications using .NET.", TeacherId = 1 },
