@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Institute_Management.Migrations
 {
     [DbContext(typeof(InstituteContext))]
-    [Migration("20250209175918_AddataInDB")]
-    partial class AddataInDB
+    [Migration("20250212063403_AddnewActualData")]
+    partial class AddnewActualData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,26 +83,129 @@ namespace Institute_Management.Migrations
                         {
                             BatchId = 1,
                             BatchName = "Batch A",
-                            BatchTiming = "9:00 AM - 12:00 PM",
-                            BatchType = "Full-Time",
+                            BatchTiming = "8:00 AM - 9:30 AM",
+                            BatchType = "Weekdays",
                             CourseId = 1
                         },
                         new
                         {
                             BatchId = 2,
                             BatchName = "Batch B",
-                            BatchTiming = "2:00 PM - 5:00 PM",
-                            BatchType = "Part-Time",
+                            BatchTiming = "10:00 AM - 11:30 AM",
+                            BatchType = "Weekdays",
                             CourseId = 2
                         },
                         new
                         {
                             BatchId = 3,
                             BatchName = "Batch C",
-                            BatchTiming = "10:00 AM - 1:00 PM",
-                            BatchType = "Full-Time",
+                            BatchTiming = "12:00 PM - 1:30 PM",
+                            BatchType = "Weekdays",
+                            CourseId = 4
+                        },
+                        new
+                        {
+                            BatchId = 4,
+                            BatchName = "Batch D",
+                            BatchTiming = "2:00 PM - 3:30 PM",
+                            BatchType = "Weekdays",
                             CourseId = 3
+                        },
+                        new
+                        {
+                            BatchId = 5,
+                            BatchName = "Batch E",
+                            BatchTiming = "4:00 PM - 5:30 PM",
+                            BatchType = "Weekdays",
+                            CourseId = 5
+                        },
+                        new
+                        {
+                            BatchId = 6,
+                            BatchName = "Batch F",
+                            BatchTiming = "6:00 PM - 7:30 PM",
+                            BatchType = "Weekdays",
+                            CourseId = 6
+                        },
+                        new
+                        {
+                            BatchId = 7,
+                            BatchName = "Batch G",
+                            BatchTiming = "8:00 AM - 9:30 AM",
+                            BatchType = "Weekend",
+                            CourseId = 7
+                        },
+                        new
+                        {
+                            BatchId = 8,
+                            BatchName = "Batch H",
+                            BatchTiming = "10:00 AM - 11:30 AM",
+                            BatchType = "Weekend",
+                            CourseId = 8
+                        },
+                        new
+                        {
+                            BatchId = 9,
+                            BatchName = "Batch I",
+                            BatchTiming = "12:00 PM - 1:30 PM",
+                            BatchType = "Weekend",
+                            CourseId = 9
+                        },
+                        new
+                        {
+                            BatchId = 10,
+                            BatchName = "Batch J",
+                            BatchTiming = "2:00 PM - 3:30 PM",
+                            BatchType = "Weekend",
+                            CourseId = 10
+                        },
+                        new
+                        {
+                            BatchId = 11,
+                            BatchName = "Batch K",
+                            BatchTiming = "4:00 PM - 5:30 PM",
+                            BatchType = "Weekend",
+                            CourseId = 11
+                        },
+                        new
+                        {
+                            BatchId = 12,
+                            BatchName = "Batch L",
+                            BatchTiming = "6:00 PM - 7:30 PM",
+                            BatchType = "Weekend",
+                            CourseId = 12
                         });
+                });
+
+            modelBuilder.Entity("Institute_Management.Models.ContactUs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Contact")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contactus");
                 });
 
             modelBuilder.Entity("Institute_Management.Models.CourseModule+Course", b =>
@@ -139,23 +242,86 @@ namespace Institute_Management.Migrations
                         new
                         {
                             CourseId = 1,
-                            CourseName = "Mathematics 101",
-                            Description = "Basic Mathematics",
+                            CourseName = "Fullstack Development with .NET",
+                            Description = "Learn to build modern full-stack applications using .NET.",
                             TeacherId = 1
                         },
                         new
                         {
                             CourseId = 2,
-                            CourseName = "Physics 101",
-                            Description = "Fundamentals of Physics",
+                            CourseName = "Fullstack Development with Python",
+                            Description = "Master full-stack development with Python and related frameworks.",
                             TeacherId = 2
                         },
                         new
                         {
                             CourseId = 3,
-                            CourseName = "Advanced Math",
-                            Description = "Advanced Topics in Math",
+                            CourseName = "Frontend Development with React",
+                            Description = "Learn to build dynamic UIs using React.",
+                            TeacherId = 3
+                        },
+                        new
+                        {
+                            CourseId = 4,
+                            CourseName = "Software Testing",
+                            Description = "Understand the principles and practices of software testing.",
                             TeacherId = 1
+                        },
+                        new
+                        {
+                            CourseId = 5,
+                            CourseName = "DevOps",
+                            Description = "Learn to automate the software delivery pipeline with DevOps practices.",
+                            TeacherId = 2
+                        },
+                        new
+                        {
+                            CourseId = 6,
+                            CourseName = "Salesforce",
+                            Description = "Learn how to develop on the Salesforce platform.",
+                            TeacherId = 3
+                        },
+                        new
+                        {
+                            CourseId = 7,
+                            CourseName = "Cloud Computing",
+                            Description = "Understand cloud computing principles and how to work with cloud providers.",
+                            TeacherId = 1
+                        },
+                        new
+                        {
+                            CourseId = 8,
+                            CourseName = "Data Analyst",
+                            Description = "Master the techniques of data analysis using Python and Excel.",
+                            TeacherId = 2
+                        },
+                        new
+                        {
+                            CourseId = 9,
+                            CourseName = "Cyber Security",
+                            Description = "Learn how to secure applications and networks from cyber threats.",
+                            TeacherId = 3
+                        },
+                        new
+                        {
+                            CourseId = 10,
+                            CourseName = "Android Development",
+                            Description = "Develop mobile applications for Android using Java and Kotlin.",
+                            TeacherId = 1
+                        },
+                        new
+                        {
+                            CourseId = 11,
+                            CourseName = "Artificial Intelligence",
+                            Description = "Dive into AI concepts and build intelligent systems with Python.",
+                            TeacherId = 2
+                        },
+                        new
+                        {
+                            CourseId = 12,
+                            CourseName = "Power BI",
+                            Description = "Learn how to visualize and analyze data using Power BI.",
+                            TeacherId = 3
                         });
                 });
 
@@ -183,6 +349,21 @@ namespace Institute_Management.Migrations
                         {
                             StudentId = 2,
                             CourseId = 2
+                        },
+                        new
+                        {
+                            StudentId = 3,
+                            CourseId = 4
+                        },
+                        new
+                        {
+                            StudentId = 4,
+                            CourseId = 3
+                        },
+                        new
+                        {
+                            StudentId = 5,
+                            CourseId = 5
                         });
                 });
 
@@ -220,6 +401,24 @@ namespace Institute_Management.Migrations
                             StudentId = 2,
                             BatchId = 2,
                             UserId = 5
+                        },
+                        new
+                        {
+                            StudentId = 3,
+                            BatchId = 3,
+                            UserId = 6
+                        },
+                        new
+                        {
+                            StudentId = 4,
+                            BatchId = 4,
+                            UserId = 7
+                        },
+                        new
+                        {
+                            StudentId = 5,
+                            BatchId = 5,
+                            UserId = 8
                         });
                 });
 
@@ -256,6 +455,12 @@ namespace Institute_Management.Migrations
                             TeacherId = 2,
                             SubjectSpecialization = "Physics",
                             UserId = 4
+                        },
+                        new
+                        {
+                            TeacherId = 3,
+                            SubjectSpecialization = "Software Engineering",
+                            UserId = 8
                         });
                 });
 
@@ -296,7 +501,7 @@ namespace Institute_Management.Migrations
                         {
                             UserId = 1,
                             ContactDetails = "1234567890",
-                            Email = "admin@example.com",
+                            Email = "admin@gmail.com",
                             Name = "Admin User",
                             Password = "admin123",
                             Role = "Admin"
@@ -305,7 +510,7 @@ namespace Institute_Management.Migrations
                         {
                             UserId = 2,
                             ContactDetails = "9876543210",
-                            Email = "john@example.com",
+                            Email = "john.doe@gmail.com",
                             Name = "John Doe",
                             Password = "password123",
                             Role = "Student"
@@ -314,7 +519,7 @@ namespace Institute_Management.Migrations
                         {
                             UserId = 3,
                             ContactDetails = "5554443333",
-                            Email = "jane@example.com",
+                            Email = "jane.smith@gmail.com",
                             Name = "Jane Smith",
                             Password = "teacher123",
                             Role = "Teacher"
@@ -323,7 +528,7 @@ namespace Institute_Management.Migrations
                         {
                             UserId = 4,
                             ContactDetails = "6667778888",
-                            Email = "mark@example.com",
+                            Email = "mark.johnson@gmail.com",
                             Name = "Mark Johnson",
                             Password = "teacher456",
                             Role = "Teacher"
@@ -332,10 +537,37 @@ namespace Institute_Management.Migrations
                         {
                             UserId = 5,
                             ContactDetails = "9990001111",
-                            Email = "alice@example.com",
+                            Email = "alice.brown@gmail.com",
                             Name = "Alice Brown",
                             Password = "student123",
                             Role = "Student"
+                        },
+                        new
+                        {
+                            UserId = 6,
+                            ContactDetails = "2345678901",
+                            Email = "tom.hanks@gmail.com",
+                            Name = "Tom Hanks",
+                            Password = "student456",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            UserId = 7,
+                            ContactDetails = "3456789012",
+                            Email = "emma.watson@gmail.com",
+                            Name = "Emma Watson",
+                            Password = "student789",
+                            Role = "Student"
+                        },
+                        new
+                        {
+                            UserId = 8,
+                            ContactDetails = "4567890123",
+                            Email = "robert.downey@gmail.com",
+                            Name = "Robert Downey",
+                            Password = "teacher789",
+                            Role = "Teacher"
                         });
                 });
 
