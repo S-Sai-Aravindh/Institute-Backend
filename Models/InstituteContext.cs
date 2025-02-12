@@ -15,6 +15,8 @@ namespace Institute_Management.Models
         public DbSet<BatchModule.Batch> Batches { get; set; }
         public DbSet<CourseModule.Course> Courses { get; set; }
         public DbSet<StudentCourseModule.StudentCourse> StudentCourses { get; set; }
+        public object Contacts { get; internal set; }
+        public DbSet<ContactUs> Contactus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
