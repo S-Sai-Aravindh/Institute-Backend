@@ -7,7 +7,7 @@
 namespace Institute_Management.Migrations
 {
     /// <inheritdoc />
-    public partial class AddnewActualData : Migration
+    public partial class Addnewdata : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,6 +26,21 @@ namespace Institute_Management.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contactus", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Enrollrequest",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    CourseName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Enrollrequest", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -329,6 +344,9 @@ namespace Institute_Management.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contactus");
+
+            migrationBuilder.DropTable(
+                name: "Enrollrequest");
 
             migrationBuilder.DropTable(
                 name: "StudentCourses");

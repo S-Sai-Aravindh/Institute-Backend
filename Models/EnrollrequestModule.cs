@@ -7,8 +7,8 @@ namespace Institute_Management.Models
     public class EnrollrequestModule
     {
         [Key]
+        public int Id { get; set; }
         public int StudentId { get; set; }
-
         public int CourseId { get; set; }
         public string CourseName { get; set; }
     }

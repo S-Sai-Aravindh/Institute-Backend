@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Institute_Management.Migrations
 {
     [DbContext(typeof(InstituteContext))]
-    [Migration("20250212094029_EnrollrequestTableadded")]
-    partial class EnrollrequestTableadded
+    [Migration("20250212121426_Addnewdata")]
+    partial class Addnewdata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -327,11 +327,11 @@ namespace Institute_Management.Migrations
 
             modelBuilder.Entity("Institute_Management.Models.EnrollrequestModule", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -340,7 +340,10 @@ namespace Institute_Management.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Enrollrequest");
                 });

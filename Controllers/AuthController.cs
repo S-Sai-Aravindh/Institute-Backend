@@ -127,6 +127,23 @@ namespace Institute_Management.Controllers
             });
         }
 
+        [HttpPut("UpdatePassword")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordDto request)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
+
+            user.Password = request.NewPassword; // Ideally, hash the password before saving
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password updated successfully" });
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Authenticate([FromBody] LoginDTO request)
