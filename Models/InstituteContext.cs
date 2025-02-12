@@ -17,6 +17,7 @@ namespace Institute_Management.Models
         public DbSet<StudentCourseModule.StudentCourse> StudentCourses { get; set; }
         public object Contacts { get; internal set; }
         public DbSet<ContactUs> Contactus { get; set; }
+        public DbSet<EnrollrequestModule> Enrollrequest {  get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
