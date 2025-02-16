@@ -19,6 +19,8 @@ namespace Institute_Management.Models
         public DbSet<ContactUs> Contactus { get; set; }
         public DbSet<EnrollrequestModule> Enrollrequest {  get; set; }
 
+        public DbSet<Newteacher> Newteachers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<BatchModule.Batch>().HasData();

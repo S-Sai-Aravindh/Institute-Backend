@@ -7,7 +7,7 @@
 namespace Institute_Management.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTableData : Migration
+    public partial class NewteacherTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,6 +41,24 @@ namespace Institute_Management.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enrollrequest", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Newteachers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactDetails = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubjectSpecialization = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Newteachers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -326,6 +344,9 @@ namespace Institute_Management.Migrations
 
             migrationBuilder.DropTable(
                 name: "Enrollrequest");
+
+            migrationBuilder.DropTable(
+                name: "Newteachers");
 
             migrationBuilder.DropTable(
                 name: "StudentCourses");

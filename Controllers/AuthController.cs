@@ -301,15 +301,15 @@ namespace Institute_Management.Controllers
                 }
 
 
-                else if (user.Role == "Teacher")
-                {
-                    var teacher = new TeacherModule.Teacher
-                    {
-                        UserId = user.UserId // Ensure that the UserId is set
-                    };
-                    _context.Teachers.Add(teacher);
-                    await _context.SaveChangesAsync();
-                }
+                //else if (user.Role == "Teacher")
+                //{
+                //    var teacher = new TeacherModule.Teacher
+                //    {
+                //        UserId = user.UserId // Ensure that the UserId is set
+                //    };
+                //    _context.Teachers.Add(teacher);
+                //    await _context.SaveChangesAsync();
+                //}
 
                 return CreatedAtAction(nameof(Register), new { id = user.UserId }, new { message = "Registration successful" });
             }
@@ -325,6 +325,66 @@ namespace Institute_Management.Controllers
         }
 
 
+        [HttpPost("newregister")]
+        public async Task<IActionResult> NewRegister([FromBody] User user)
+        {
+            // Validate the incoming data
+            if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Password))
+            {
+                return BadRequest(new { message = "Invalid input. Email and Password are required." });
+            }
+
+            // Check if the user already exists
+            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+            {
+                return Conflict(new { message = "User already exists." });
+            }
+
+            try
+            {
+                // Save the user first to generate a UserId
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // If the user's role is Teacher, add an entry to the Teachers table.
+                if (user.Role == "Teacher")
+                {
+                    var teacher = new TeacherModule.Teacher
+                    {
+                        UserId = user.UserId
+                        // Add any additional teacher properties here if necessary
+                    };
+
+                    _context.Teachers.Add(teacher);
+                    await _context.SaveChangesAsync();
+
+                    // Remove the corresponding teacher data from the Newteachers table
+                    var newTeacherRecord = await _context.Newteachers
+                        .FirstOrDefaultAsync(nt => nt.Email == user.Email);
+                    if (newTeacherRecord != null)
+                    {
+                        _context.Newteachers.Remove(newTeacherRecord);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    // Optionally, you could return an error if this endpoint is only for teachers.
+                    return BadRequest(new { message = "This registration endpoint is for teachers only." });
+                }
+
+                return CreatedAtAction(nameof(NewRegister), new { id = user.UserId }, new { message = "Registration successful" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "An error occurred while processing your request.",
+                    error = ex.Message,
+                    suggestion = "Ensure the API URL is correct and the server is running."
+                });
+            }
+        }
 
     }
 }
